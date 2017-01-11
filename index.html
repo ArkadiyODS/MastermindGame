@@ -1,0 +1,107 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="css/style.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="js/patternMatcher.js"></script>
+<script src="js/randomiser.js"></script>
+</head>
+<body>
+
+<div class="header">
+<h1>MasterMind</h1></div>
+<div class="leftSidePanel"></div> 
+<div class="mainField"> 
+</div>
+
+<script>
+
+var attempt = 0; 
+var maxAttempts = 10; 
+var code = CodeRandomiser(); 
+
+// Start codition creation
+
+$(function(){ 
+	for (var i = 1 ; i <= 6; i++) {
+		var html = '<div class="cell" onselectstart="return false"  ondrop="drop(event)" ondragover="allowDrop(event)"> <img id="' + i + 'drag"  src="images/ball_' + i + '.png" draggable="true" ondragstart="drag(event)"> </div>' 
+		$('.leftSidePanel').append(html);
+	}
+	CreateNewAttempt(attempt++); 
+});
+
+function CodeRandomiser() {
+	var set = [];
+      for (var i = 0; i < 4; i++) {
+        set.push(Randomiser(1,6));
+      }
+      return parseInt(set.join(''));
+}
+
+// Function creates new row of cells and button
+function CreateNewAttempt(attempt){
+	var level = $('<div class="level" id="'+ attempt +'attempt"></div>');
+		for (var i = 1 ; i <= 4; i++) {
+			var row = '<div class="cell" id="'+ i + 'cell" ondblclick="$(this).children().remove()" ondrop="drop(event)" ondragover="allowDrop(event)">'  
+			level.append(row);
+		}
+		level.append('<button onclick="NextStep($(this).parent())" type="button">Check</button>');
+		$('.mainField').append(level); 
+}
+
+// Function is called when the button "Check" is pressed.
+function NextStep(parent) {    
+	var balls = parent.children().find('img'); 
+	// Return if some cells are empty
+ 	if(balls.length < 4)
+		return; 
+	var guess = "";
+	for (var i = 0; i < balls.length ; i++){ 
+		guess += balls[i]['id'][0];
+	} 
+	// Guess is cheked via PatternMatcher()
+	var pattern = PatternMatcher(code, parseInt(guess));
+	// Result is added
+	parent.append("<div>Black: " + pattern.B + " White: " + pattern.W + "</div>");  
+	// Current row is blocked for amendments
+	parent.find('button').attr('onclick', false);
+	parent.find('.cell').attr('ondblclick', false);
+	parent.find('.cell').attr('ondrop', false);
+	parent.find('.cell').attr('ondragover', false);
+
+	if(pattern.B == 4)
+		Win();
+	else if (attempt >= maxAttempts)
+		Loose();
+	else
+		CreateNewAttempt(attempt++); 
+}
+
+function Win() { 
+   if(confirm("You won in " + attempt + " attempts. Do you want to try again?"))
+   	location.reload();
+}
+
+function Loose() {   
+	if(confirm("You exceede " + maxAttempts + " allowed attempts. Do you want to try again?"))
+		location.reload();
+}
+
+// Block of functions for drag and drop events for balls
+function allowDrop(ev) {
+    ev.preventDefault();
+}
+
+function drag(ev) {
+    ev.dataTransfer.setData("text", ev.target.id);
+}
+
+function drop(ev) {
+    ev.preventDefault();
+    var data = ev.dataTransfer.getData("text"); 
+   	ev.target.appendChild(document.getElementById(data).cloneNode(true));
+}
+</script>
+</body>
+</html>
