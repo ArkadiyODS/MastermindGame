@@ -1,47 +1,45 @@
 .cell {
 	position: relative;
     width: 50px;
-    height: 50px; 
+    height: 50px;
     padding: 5px;
     border: 1px solid #aaaaaa;
 }
 .ball{
 	position: absolute;
     left: 5px;
-    top: 7px; 
+    top: 7px;
     z-index: -2;
-} 
-.header{
-	position: fixed;
+}
+.result{
+	margin: 5px;
+}
+h1{
 	margin: auto;
 	text-align: center;
-    width: 100%; 
     padding: 10px;
-	left: 10px;
-	top: 10px;
 	height: 80px;
 	color: blue;
 }
 .leftSidePanel{
-	position: fixed; 
-    width: 80px; 
-    padding: 10px;
-	left: 10px;  
-	top: 80px;
-} 
+	position: fixed;
+	margin: auto;
+  padding: 10px;
+	left: 10px;
+}
 .mainField{
-	position: relative; 
-	margin: auto; 
-	float: left;
-	left: 80px;  
-	top: 80px;
+	position: relative;
+	margin: auto;
+	left: 200px;
 }
 .level{
 	width: 100%;
+	padding: 10px;
 }
 button{
 	height: 62px;
+	margin-left: 10px;
 }
-.mainField .cell{ 
-	float: left; 
+.mainField .cell{
+	float: left;
 }
