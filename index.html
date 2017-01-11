@@ -63,7 +63,7 @@ function NextStep(parent) {
 	// Guess is cheked via PatternMatcher()
 	var pattern = PatternMatcher(code, parseInt(guess));
 	// Result is added
-	parent.append("<div>" + pattern.B + " шаров на своем месте и " + pattern.W + " шаров совпали по цвету но не на своих местах</div>");  
+	parent.append("<div>" + pattern.B + " шара на своем месте и " + pattern.W + " шара совпали по цвету но не на своих местах</div>");  
 	// Current row is blocked for amendments
 	parent.find('button').attr('onclick', false);
 	parent.find('.cell').attr('ondblclick', false);
