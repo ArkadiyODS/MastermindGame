@@ -112,12 +112,12 @@ function NextStep(parent) {
 }
 
 function Win() {
-   if(confirm("You won in " + attempt + " attempts. Do you want to try again?"))
+   if(confirm("Вы победили за " + attempt + " попыток. Хотите попробовать еще раз?"))
    	location.reload();
 }
 
 function Loose() {
-	if(confirm("You exceede " + maxAttempts + " allowed attempts. Do you want to try again?"))
+	if(confirm("Вы проиграли превысив " + maxAttempts + " разрешенных попыток. Хотите попробовать еще раз?"))
 		location.reload();
 }
 
