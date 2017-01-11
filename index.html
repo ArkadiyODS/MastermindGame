@@ -8,27 +8,25 @@
 <script src="js/randomiser.js"></script>
 </head>
 <body>
-
-<div class="header">
-<h1>MasterMind</h1></div>
-<div class="leftSidePanel"></div> 
-<div class="mainField"> 
+<h1>MASTERMIND</h1></div>
+<div class="leftSidePanel"></div>
+<div class="mainField">
 </div>
 
 <script>
 
-var attempt = 0; 
-var maxAttempts = 10; 
-var code = CodeRandomiser(); 
+var attempt = 0;
+var maxAttempts = 10;
+var code = CodeRandomiser();
 
 // Start codition creation
 
-$(function(){ 
+$(function(){
 	for (var i = 1 ; i <= 6; i++) {
-		var html = '<div class="cell" onselectstart="return false"  ondrop="drop(event)" ondragover="allowDrop(event)"> <img id="' + i + 'drag"  src="images/ball_' + i + '.png" draggable="true" ondragstart="drag(event)"> </div>' 
+		var html = '<div class="cell" onselectstart="return false"  ondrop="drop(event)" ondragover="allowDrop(event)"> <img id="' + i + 'drag"  src="images/ball_' + i + '.png" draggable="true" ondragstart="drag(event)"> </div>'
 		$('.leftSidePanel').append(html);
 	}
-	CreateNewAttempt(attempt++); 
+	CreateNewAttempt(attempt++);
 });
 
 function CodeRandomiser() {
@@ -43,29 +41,51 @@ function CodeRandomiser() {
 function CreateNewAttempt(attempt){
 	var level = $('<div class="level" id="'+ attempt +'attempt"></div>');
 		for (var i = 1 ; i <= 4; i++) {
-			var row = '<div class="cell" id="'+ i + 'cell" ondblclick="$(this).children().remove()" ondrop="drop(event)" ondragover="allowDrop(event)">'  
+			var row = '<div class="cell" id="'+ i + 'cell" ondblclick="$(this).children().remove()" ondrop="drop(event)" ondragover="allowDrop(event)">'
 			level.append(row);
 		}
-		level.append('<button onclick="NextStep($(this).parent())" type="button">Check</button>');
-		$('.mainField').append(level); 
+
+		level.append('<button onclick="CellCleaner($(this).parent())" type="button" style="color:red"> Очистить </button>');
+		level.append('<button onclick="NextStep($(this).parent())" type="button"> Проверить </button>');
+		$('.mainField').append(level);
+		window.scrollTo(0,$('#'+ attempt +'attempt').offset().top);
+	}
+
+	function CellCleaner(parent) {
+			parent.find(".cell").children().remove();
 }
 
 // Function is called when the button "Check" is pressed.
-function NextStep(parent) {    
-	var balls = parent.children().find('img'); 
+function NextStep(parent) {
+	var balls = parent.children().find('img');
 	// Return if some cells are empty
  	if(balls.length < 4)
-		return; 
+		return;
 	var guess = "";
-	for (var i = 0; i < balls.length ; i++){ 
+	for (var i = 0; i < balls.length ; i++){
 		guess += balls[i]['id'][0];
-	} 
+	}
 	// Guess is cheked via PatternMatcher()
 	var pattern = PatternMatcher(code, parseInt(guess));
 	// Result is added
-	parent.append("<div>" + pattern.B + " шара на своем месте и " + pattern.W + " шара совпали по цвету но не на своих местах</div>");  
+
+
+	function CorrectWording(number)
+	{
+		switch (number) {
+			case 0:
+				return " шаров";
+			case 1:
+				return " шар";
+			default:
+				return " шара";
+		}
+	}
+
+	parent.append("<div class='result'>На своем месте: " + pattern.B + CorrectWording(pattern.B) + "</div>");
+	parent.append("<div class='result'>Совпали по цвету но не на своих местах: " + pattern.W  +  CorrectWording(pattern.W) + "</div>");
 	// Current row is blocked for amendments
-	parent.find('button').attr('onclick', false);
+	parent.find('button').remove();
 	parent.find('.cell').attr('ondblclick', false);
 	parent.find('.cell').attr('ondrop', false);
 	parent.find('.cell').attr('ondragover', false);
@@ -75,15 +95,15 @@ function NextStep(parent) {
 	else if (attempt >= maxAttempts)
 		Loose();
 	else
-		CreateNewAttempt(attempt++); 
+		CreateNewAttempt(attempt++);
 }
 
-function Win() { 
+function Win() {
    if(confirm("You won in " + attempt + " attempts. Do you want to try again?"))
    	location.reload();
 }
 
-function Loose() {   
+function Loose() {
 	if(confirm("You exceede " + maxAttempts + " allowed attempts. Do you want to try again?"))
 		location.reload();
 }
@@ -99,7 +119,7 @@ function drag(ev) {
 
 function drop(ev) {
     ev.preventDefault();
-    var data = ev.dataTransfer.getData("text"); 
+    var data = ev.dataTransfer.getData("text");
    	ev.target.appendChild(document.getElementById(data).cloneNode(true));
 }
 </script>
