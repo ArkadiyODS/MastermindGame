@@ -133,6 +133,7 @@ function drag(ev) {
 function drop(ev) {
     ev.preventDefault();
     var data = ev.dataTransfer.getData("text");
+   	ev.target.removeChild(ev.target.childNodes[0]);
    	ev.target.appendChild(document.getElementById(data).cloneNode(true));
 }
 </script>
