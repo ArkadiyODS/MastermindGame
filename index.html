@@ -8,8 +8,10 @@
 <script src="js/randomiser.js"></script>
 </head>
 <body>
-<h1>ВЗЛОМЩИК</h1>
-<div><p>Компьютер загадал код: 4-х значную комбинацию из 6 цветных шаров указанных слева (цвета в коде могут повторятся).</br>
+<h1> ВЗЛОМЩИК</h1>
+
+<div id="ruleName" onclick="$('#rules').toggle()" >ПРАВИЛА ИГРЫ</div>
+<div id="rules" style="display:none"><p>Компьютер загадал код: 4-х значную комбинацию из 6 цветных шаров указанных слева (цвета в коде могут повторятся).</br>
 	Цель игры угадать код загаданный копьютером за минимальное число попыток (если превысите 10 попыток - вы проиграли).</br>
 	После каждой проверки компьютер будет отвечать сколько шаров находится на своем месте и сколько еще совпадают по цвету но находятся не на месте.</br></br>
 	Например код "<span style="background-color:lightgreen">ЗЕЛЕНЫЙ</span> <span style="background-color:lightgreen">ЗЕЛЕНЫЙ</span>
@@ -20,7 +22,8 @@
 	</br>Если ваш следующий ход будет "<span style="background-color:lightgreen">ЗЕЛЕНЫЙ</span> <span style="background-color:red">КРАСНЫЙ</span> <span style="background-color:lightgreen">ЗЕЛЕНЫЙ</span> <span style="background-color:yellow">ЖЁЛТЫЙ</span>",</br>
 	то компьютер ответит что <b>2</b> шара на своем месте (первый <span style="background-color:lightgreen">ЗЕЛЕНЫЙ</span> и <span style="background-color:yellow">ЖЁЛТЫЙ</span>)
 	и <b>1</b> шар совпадает по цвету, но находится не на месте (второй <span style="background-color:lightgreen">ЗЕЛЕНЫЙ</span>).</br>
-	</br><b>Удачи!</b>
+	</br>Шары можно перетаскивать из ячеек слева на странице или из соседних ячеек. Убирать шары из ячеек можно двойным щелчком мыши или кнопкой "очистить".
+	</br></br><b>Удачи!</b>
 	</p></div>
 <div class="leftSidePanel"></div>
 <div class="mainField">
@@ -32,11 +35,20 @@ var attempt = 0;
 var maxAttempts = 10;
 var code = CodeRandomiser();
 
+var colors = {
+	1: "Красный",
+	2: "Фиолетовый",
+	3: "Желтый",
+	4: "Зеленый",
+	5: "Розовый",
+	6: "Голубой"
+} 
+
 // Start codition creation
 
 $(function(){
 	for (var i = 1 ; i <= 6; i++) {
-		var html = '<div class="cell" onselectstart="return false"  ondrop="drop(event)" ondragover="allowDrop(event)"> <img id="' + i + 'drag"  src="images/ball_' + i + '.png" draggable="true" ondragstart="drag(event)"> </div>'
+		var html = '<div class="cell" onselectstart="return false"  ondrop="drop(event)" ondragover="allowDrop(event)"> <img class="dragBall" id="' + i + 'drag"  src="images/ball_' + i + '.png" draggable="true" ondragstart="drag(event)"> </div>'
 		$('.leftSidePanel').append(html);
 	}
 	CreateNewAttempt(attempt++);
@@ -83,6 +95,8 @@ function NextStep(parent) {
 	// Result is added
 
 
+
+
 	function CorrectWording(number)
 	{
 		switch (number) {
@@ -111,25 +125,34 @@ function NextStep(parent) {
 		CreateNewAttempt(attempt++);
 }
 
+function getColorCode(code){
+	var codeArr = [];
+
+   do{
+     codeArr.unshift(code % 10);
+     code = Math.floor(code/10);
+   }while(code > 0);
+
+	 	return codeArr.reduce(function(res, item){
+		 			return res + colors[item] + " ";
+	 			}," ");
+
+}
 function Win() {
    if(confirm("Вы победили за " + attempt + " попыток. Хотите попробовать еще раз?"))
    	location.reload();
 }
-
 function Loose() {
-	if(confirm("Вы проиграли превысив " + maxAttempts + " разрешенных попыток. Хотите попробовать еще раз?"))
+	if(confirm("Вы проиграли превысив " + maxAttempts + " разрешенных попыток. Правилльный код был " + getColorCode(code) + ".Хотите попробовать еще раз?"))
 		location.reload();
 }
-
 // Block of functions for drag and drop events for balls
 function allowDrop(ev) {
     ev.preventDefault();
 }
-
 function drag(ev) {
     ev.dataTransfer.setData("text", ev.target.id);
 }
-
 function drop(ev) {
     ev.preventDefault();
     var data = ev.dataTransfer.getData("text");
