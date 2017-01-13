@@ -1,9 +1,19 @@
+#ruleName{
+	font-size: 20px;
+	margin-bottom: : 20px;
+	color: Navy;
+}
+
+#ruleName:hover{
+	text-decoration: underline;
+}
+
 .cell {
 	position: relative;
     width: 50px;
     height: 50px;
     padding: 5px;
-    border: 1px solid #aaaaaa;
+    border: 1px solid black;
 }
 .ball{
 	position: absolute;
@@ -16,22 +26,22 @@
 }
 h1{
 	margin: auto;
+	font-size: 40px;
 	text-align: center;
-    padding: 10px;
-	height: 80px;
-	color: blue;
+	height: 40px;
+	color: navy;
 }
 .leftSidePanel{
 	position: fixed;
 	margin: auto;
   padding: 10px;
 	left: 10px;
-	min-height: 800px;
+	min-height:800px;
 }
 .mainField{
 	position: relative;
-	margin: auto;
 	left: 200px;
+	display: block; 
 }
 .level{
 	width: 100%;
@@ -43,4 +53,8 @@ button{
 }
 .mainField .cell{
 	float: left;
+}
+body{
+	font-family: Arial, sans-serif; 
+		background-color: lightGrey;
 }
